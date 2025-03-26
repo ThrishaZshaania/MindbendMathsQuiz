@@ -1,107 +1,89 @@
 <?PHP
-#memanggil fail header.php
-include('header.php');
-?>
-<!-- antara muka untuk daftar masuk/login -->
-<div class="container w3-margin-bottom">
-  <img src="images/b12.png" alt="Login" style="width:132%;" class="w3-round-xlarge w3-card">
-  <a href="#about" class="btn">LOGIN</a>
+
+# memanggil faill header.php
+include ('header_guru.php');
+#Memaparkan nama guru dah tahap
+echo "
+
+<div class='w3-panel w3-center w3-topbar w3-bottombar w3-border-gray w3-white'>
+     Nama Guru:".$_SESSION ['nama_guru']." (".$_SESSION['tahap'].")
 </div>
-<div class="w3-row" id="about">
-<div class="w3-col w3-container w3-margin-top" style="width:30%;scroll-behavior: smooth;" >
-<br>
-<br>
-<br>
+
+";
+?>
+<?PHP include ('audio_guru.php'); ?>
+<?PHP include('../masa.php'); ?>
+<!-- Memaparkan senarai latihan terkini -->
+<!-- antara muka untuk daftar masuk/login -->
 <table width ='100%' class='w3-table-all w3-card'>
 	<tr>
 		<td align='center' width='32%'>
-			<p style='font-size: 25px;color:#000000'> Login Pengguna </p>
-			<form action='login.php' method='POST'>
-            
-			
-			<div class="w3-row w3-section">
-                <div class="w3-col" style="width:50px"><i style="color:#5390D9" class="w3-xxlarge fa fa-id-card-o">
-			</i></div>
-			<div class="w3-rest">
-			    <input class="w3-input w3-animate-input w3-border w3-round-large" name='nokp' placeholder='04050301xxxx' type="text" style="width:50%">
-                </div>
-            </div> 
+            <div class="w3-content w3-section w3-middle" style="max-width:15900px">
+                <img class="mySlides w3-animate-fading  w3-image"    src="../images/g1.png"    style="width:100%">
+                <img class="mySlides w3-animate-fading  w3-image"    src="../images/g2.png"    style="width:100%">
+                <img class="mySlides w3-animate-fading  w3-image"    src="../images/g3.png"    style="width:100%">
+            </div>
+		   
+            <script>
+            var myIndex = 0;
+            carousel();
 
-			<div class="w3-row w3-section">
-                <div class="w3-col" style="width:50px"><i style="color:#5390D9" class="w3-xxlarge fa fa-unlock-alt">
-			</i></div> 
-			<div class="w3-rest">
-			    <input class="w3-input w3-animate-input w3-border w3-round-large" name='katalaluan' placeholder='Katalaluan' type='password' style="width:50%">
-                </div>
-            </div> 
-			
-			<input type ='radio' class="w3-radio"  name='jenis' value='murid' checked>
-			<label style='font-size: 20px;color:#5E60CE'><b> Murid </b></label>
-
-			<input type ='radio' class="w3-radio"  name='jenis' value='guru'> 
-			<label style='font-size: 20px;color:#5E60CE'><b> Guru </b></label>
-			
-			<nobr> <button style="background-color:#56CFE1;color:#ffffff" class="w3-margin-top w3-margin-bottom w3-button w3-border w3-round-xlarge w3-card" type='submit' title='Login'>Login <i class=" fa fa-sign-in" aria-hidden="true"></i></button>
-			<a style="background-color:#56CFE1;color:#ffffff" class="w3-margin-top w3-margin-bottom w3-button w3-border w3-round-xlarge w3-card" href='signup.php'>Daftar Murid Baru <i class="fa fa-user-plus" aria-hidden="true"></i></a> </nobr>
-		
-		    </form>
-      </header>
+            function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";  
+            }
+            myIndex++;
+            if (myIndex > x.length) {myIndex = 1}    
+            x[myIndex-1].style.display = "block";  
+            setTimeout(carousel, 5000);    
+            }
+            </script>
 			<!-- pautan untuk mendaftar murid baru-->
 		</td>
 		<td>
-		</tr>
-    </table>
-  </div>
+		<!--Senarai set latihan terkini-->
+		<p style='font-size: 25px' class="w3-center w3-text-black">Senarai Latihan Terkini</p>
+		<table border='1' class='w3-margin-bottom w3-table-all w3-hoverable'>
+		<tr style='background-color:#5E60CE' class='w3-text-white'>
+			<td>Topik</td>
+			<td>Kelas</td>
+			<td>Nama Guru</td>
+		</tr> 
+		<?php
+    # Arahan untuk mencari data guru, kelas dan set_soalan
+    $arahan_latihan="SELECT* FROM set_soalan,guru,kelas
+    WHERE
+              set_soalan.nokp_guru     =     guru.nokp_guru
+    AND       kelas.nokp_guru          =     guru.nokp_guru
+    ORDER BY  topik ASC";
 
+    # Melaksanakan arahan carian di atas
+    $laksana_latihan=mysqli_query($condb, $arahan_latihan) ;
 
-  <div class="w3-col w3-container w3-margin-top" style="width:70%">
-  <!DOCTYPE html>
-  <html>
-  <title>Mindbend Portal Matematik</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-    .mySlides {display: ''}
-    body 
+    #mengambil data dan memaparkan semula data tersebut
+    while($rekod=mysqli_fetch_array($laksana_latihan))
     {
-        font-family: 'Quicksand', sans-serif;
-        font-size: 20px;
-        
+    echo "
+        <tr>
+           <td>".$rekod['topik']."</td>
+           <td>".$rekod['ting']." ".$rekod['nama_kelas']."</td> 
+           <td>".$rekod['nama_guru']."</td>  
+        </tr>";
+
     }
-    </style>
-    <body>
-
-    <div class="w3-content w3-section w3-margin-top w3-margin-bottom" style="max-width:420px">
-    <img class="mySlides w3-animate-fading  w3-image"    src="images/p1.png"    style="width:100%">
-    <img class="mySlides w3-animate-fading  w3-image"    src="images/p2.png"    style="width:100%">
-    <img class="mySlides w3-animate-fading  w3-image"    src="images/p3.png"    style="width:100%">
-    </div>
-
-
-    <script>
-      var myIndex = 0;
-      carousel();
-
-      function carousel() {
-      var i;
-      var x = document.getElementsByClassName("mySlides");
-      for (i = 0; i < x.length; i++) {
-      x[i].style.display = "none";  
-    }
-      myIndex++;
-      if (myIndex > x.length) {myIndex = 1}    
-      x[myIndex-1].style.display = "block";  
-      setTimeout(carousel, 5000);    
-    }
-    </script>
-
-   </body>
-   </html>
-  </div>
-
+    ?>
+          </table>
+		</td>	
+	</tr>
+</table>
 </div>
-<?php
-#memanggil fail footer.php
-include('top.php');
-include('footer.php');
-?>
+<?PHP include('footer_guru.php'); ?>
+
+
+
+
+
+
+
